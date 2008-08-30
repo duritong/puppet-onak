@@ -1,36 +1,24 @@
-# modules/skeleton/manifests/init.pp - manage skeleton stuff
+# modules/onak/manifests/init.pp - manage onak stuff
 # Copyright (C) 2007 admin@immerda.ch
 # GPLv3
 
-# modules_dir { "skeleton": }
+# modules_dir { "onak": }
 
-class skeleton {
+class onak {
     case $operatingsystem {
-        gentoo: { include skeleton::gentoo }
-        default: { include skeleton::base }
+        default: { include onak::base }
     }
 }
 
-class skeleton::base {
-    package{'skeleton':
+class onak::base {
+    package{'onak':
         ensure => installed,
     }
 
-    service{skeleton:
-        ensure => running,
-        enable => true,
-        #hasstatus => true, #fixme!
-        require => Package[skeleton],
-    }
-
-}
-
-class skeleton::gentoo inherits skeleton::base {
-    Package[skeleton]{
-        category => 'some-category',
-    }
-
-    #conf.d file if needed
-    # needs module gentoo
-    #gentoo::etcconfd { skeleton: require => "Package[skeleton]", notify => "Service[skeleton]"}
+#    service{onak:
+#        ensure => running,
+#        enable => true,
+#        #hasstatus => true, #fixme!
+#        require => Package[onak],
+#    }
 }
