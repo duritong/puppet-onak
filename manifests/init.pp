@@ -18,7 +18,7 @@ class onak::base {
                     "puppet://$server/files/onak/onak.conf",
                     "puppet://$server/onak/onak.conf" ],
         require => Package['onak'],
-        notify => Service['Package'],
+        notify => Service['onak'],
         owner => root, group => 0, mode => 0644;
     }
 
