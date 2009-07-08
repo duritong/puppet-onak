@@ -1,5 +1,5 @@
 class onak::logrotate {
-  include logrotate
+  include ::logrotate
 
   file{'/etc/logrotate.d/onak':
     content => "/var/log/onak.log {
