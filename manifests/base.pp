@@ -20,4 +20,8 @@ class onak::base {
   }
 
   include onak::logrotate
+
+  if $use_shorewall {
+    include shorewall::keyserver
+  }
 }
