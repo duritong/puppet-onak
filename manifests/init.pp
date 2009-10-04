@@ -3,7 +3,11 @@
 # GPLv3
 
 class onak {
-    case $operatingsystem {
-        default: { include onak::base }
-    }
+  case $operatingsystem {
+    default: { include onak::base }
+  }
+
+  if $use_shorewall {
+    include shorewall::rules::keyserver
+  }
 }
