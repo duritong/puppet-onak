@@ -1,11 +1,27 @@
 define onak::nagios(
+  $ensure = 'present',
   $keyid,
-  $first_keyline
+  $first_keyline,
+  $protocol = 'both'
 ){
   nagios::service{
     "hkp_${name}":
-      check_command => "check_http_port_url_content!${name}!11371!'/pks/lookup?op=get&search=${keyid}'!${first_keyline}";
+      ensure => $ensure ? {
+        'present' => $protocol ? {
+          'hkps' => 'absent',
+          default => 'present',
+        },
+        default => $ensure,
+      },
+	  check_command => "check_http_port_url_content!${name}!11371!'/pks/lookup?op=get&search=${keyid}'!${first_keyline}";
     "hkps_${name}":
-      check_command => "check_https_port_url_content!${name}!11372!'/pks/lookup?op=get&search=${keyid}'!${first_keyline}";
+      ensure => $ensure ? {
+        'present' => $protocol ? {
+          'hkps' => 'absent',
+          default => 'present',
+        },
+        default => $ensure,
+      },
+      check_command => "check_https_port_url_content!${name}!11372!'/pks/lookup?op=get&search=${keyid}'!${first_keyline}";	      
   }
 }
