@@ -17,7 +17,7 @@ define onak::nagios(
     "hkps_${name}":
       ensure => $ensure ? {
         'present' => $protocol ? {
-          'hkps' => 'absent',
+          'hkp' => 'absent',
           default => 'present',
         },
         default => $ensure,
