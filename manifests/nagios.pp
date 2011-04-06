@@ -2,7 +2,8 @@ define onak::nagios(
   $ensure = 'present',
   $keyid,
   $first_keyline,
-  $protocol = 'both'
+  $protocol = 'both',
+  $max_check_attempts = ''
 ){
   nagios::service{
     "hkp_${name}":
@@ -13,7 +14,8 @@ define onak::nagios(
         },
         default => $ensure,
       },
-	  check_command => "check_http_port_url_content!${name}!11371!'/pks/lookup?op=get&search=${keyid}'!${first_keyline}";
+      max_check_attempts => $max_check_attempts,
+      check_command => "check_http_port_url_content!${name}!11371!'/pks/lookup?op=get&search=${keyid}'!${first_keyline}";
     "hkps_${name}":
       ensure => $ensure ? {
         'present' => $protocol ? {
@@ -22,6 +24,7 @@ define onak::nagios(
         },
         default => $ensure,
       },
+      max_check_attempts => $max_check_attempts,
       check_command => "check_https_port_url_content!${name}!11372!'/pks/lookup?op=get&search=${keyid}'!${first_keyline}";	      
   }
 }
