@@ -5,6 +5,11 @@ define onak::nagios(
   $protocol = 'both',
   $max_check_attempts = ''
 ){
+
+  if !keyid and !$first_keyline {
+    fail("You need to pass \$first_keyline and \$keyid")
+  }
+
   nagios::service{
     "hkp_${name}":
       ensure => $ensure ? {
@@ -25,6 +30,6 @@ define onak::nagios(
         default => $ensure,
       },
       max_check_attempts => $max_check_attempts,
-      check_command => "check_https_port_url_content!${name}!11372!'/pks/lookup?op=get&search=${keyid}'!${first_keyline}";	      
+      check_command => "check_https_port_url_content!${name}!11372!'/pks/lookup?op=get&search=${keyid}'!${first_keyline}";
   }
 }
