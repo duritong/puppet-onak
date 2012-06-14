@@ -3,18 +3,20 @@
 # GPLv3
 
 class onak(
-  $keyserver_host = hiera('onak_keyserver_host',''),
-  $nagios_keyid = hiera('onak_nagios_keyid',false),
-  $nagios_first_keyline = hiera('onak_nagios_first_keyline',false)
+  $keyserver_host = '',
+  $nagios_keyid = false,
+  $nagios_first_keyline = false,
+  $manage_shorewall = false,
+  $manage_nagios = false
 ) {
   case $::operatingsystem {
     default: { include onak::base }
   }
 
-  if hiera('use_shorewall',false) {
+  if $manage_shorewall {
     include shorewall::rules::keyserver
   }
-  if hiera('use_nagios',false) {
+  if $manage_nagios {
     onak::nagios{$onak::keyserver_host:
       keyid => $onak::nagios_keyid,
       first_keyline => $onak::nagios_first_keyline,
