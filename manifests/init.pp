@@ -3,7 +3,7 @@
 # GPLv3
 
 class onak(
-  $keyserver_host = '',
+  $keyserver_host = $::fqdn,
   $nagios_keyid = false,
   $nagios_first_keyline = false,
   $manage_shorewall = false,
