@@ -9,7 +9,7 @@ class onak::logrotate {
   compress
   copytruncate
   notifempty
-  create 640 apache onak
+  create 640 apache apache
 }\n",
     require => Package['logrotate'],
     owner => root, group => 0, mode => 0644;
