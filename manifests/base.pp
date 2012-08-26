@@ -19,5 +19,14 @@ class onak::base {
     require => Package[onak],
   }
 
+  if $selinux == 'true' {
+    package {
+      'onak-selinux' :
+        ensure => present,
+        require => Package['onak'],
+        before => Service['onak'],
+    }
+  }
+
   include onak::logrotate
 }
