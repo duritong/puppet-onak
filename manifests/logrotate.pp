@@ -12,6 +12,8 @@ class onak::logrotate {
   create 640 apache apache
 }\n",
     require => Package['logrotate'],
-    owner => root, group => 0, mode => 0644;
+    owner   => 'root',
+    group   => 0,
+    mode    => '0644';
   }
 }

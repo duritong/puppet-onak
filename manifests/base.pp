@@ -1,3 +1,4 @@
+# manage onal
 class onak::base {
   package{'onak':
     ensure => installed,
@@ -8,23 +9,25 @@ class onak::base {
                 "puppet:///modules/site_onak/onak.conf",
                 "puppet:///modules/onak/onak.conf" ],
     require => Package['onak'],
-    notify => Service['onak'],
-    owner => root, group => 0, mode => 0644;
+    notify  => Service['onak'],
+    owner   => 'root',
+    group   => 0,
+    mode    => '0644';
   }
 
-  service{onak:
-    ensure => running,
-    enable => true,
+  service{'onak':
+    ensure    => running,
+    enable    => true,
     hasstatus => true,
-    require => Package[onak],
+    require   => Package['onak'],
   }
 
   if $selinux == 'true' {
     package {
       'onak-selinux' :
-        ensure => present,
+        ensure  => present,
         require => Package['onak'],
-        before => Service['onak'],
+        before  => Service['onak'],
     }
   }
 
