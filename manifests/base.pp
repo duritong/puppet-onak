@@ -1,18 +1,23 @@
-# manage onal
+# manage onak
 class onak::base {
   package{'onak':
     ensure => installed,
   }
 
-  file{'/etc/onak.conf':
-    source => [ "puppet:///modules/site_onak/${::fqdn}/onak.conf",
-                'puppet:///modules/site_onak/onak.conf',
-                'puppet:///modules/onak/onak.conf' ],
-    require => Package['onak'],
-    notify  => Service['onak'],
-    owner   => 'root',
-    group   => 0,
-    mode    => '0644';
+  if versioncmp($facts['os']['release']['major'],'6') > 0 {
+    # tbd
+  } else {
+    file{'/etc/onak.conf':
+      source  => [ "puppet:///modules/site_onak/${::fqdn}/onak.conf",
+                  'puppet:///modules/site_onak/onak.conf',
+                  'puppet:///modules/onak/onak.conf' ],
+      require => Package['onak'],
+      notify  => Service['onak'],
+      owner   => 'root',
+      group   => 0,
+      mode    => '0644';
+    }
+    include onak::logrotate
   }
 
   service{'onak':
@@ -22,14 +27,12 @@ class onak::base {
     require   => Package['onak'],
   }
 
-  if $selinux == 'true' {
+  if $facts['selinux'] {
     package {
       'onak-selinux' :
-        ensure  => present,
+        ensure  => installed,
         require => Package['onak'],
         before  => Service['onak'],
     }
   }
-
-  include onak::logrotate
 }
