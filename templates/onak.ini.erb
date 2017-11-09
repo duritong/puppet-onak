@@ -58,13 +58,13 @@ syncsite=<%= site %>
 type=db4
 location=/var/lib/onak
 
-[backend:examplehkp]
+;[backend:examplehkp]
 ; An example HKP backend; all operations will be done against the
 ; provided keyserver, with no local storage.
-type=hkp
-location=hkp://the.earth.li/
+;type=hkp
+;location=hkp://the.earth.li/
 
-[backend:examplestacked]
+;[backend:examplestacked]
 ; A stacked set of backends. All fetch operations will be tried against
 ; the provided list of backends, from left to right, until one succeeds.
 ; All store operations are against the first backend.
@@ -75,5 +75,5 @@ location=hkp://the.earth.li/
 ; backend.
 ; Note keys are not expired from the DB4 backend, so without any other
 ; update mechanism configured this will result in stale data eventually.
-type=stacked
-location=defaultdb4:examplehkp
+;type=stacked
+;location=defaultdb4:examplehkp
