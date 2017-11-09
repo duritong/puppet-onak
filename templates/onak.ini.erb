@@ -1,0 +1,79 @@
+;
+; Configuration for onak, an OpenPGP compatible keyserver
+;
+[main]
+backend=defaultdb4
+backends_dir=/usr/lib64/onak/backends
+logfile=/var/log/onak/onak.log
+; Loglevel : 0 is highest debug, default is 3, nothing is 7+
+loglevel=3
+; Should we use the keyd backend?
+use_keyd=false
+sock_dir=/run/onak
+; Maximum number of keys to return in a reply to an index, verbose index or
+; get. Setting it to -1 will allow any size of reply.
+max_reply_keys=128
+
+; Settings related to key verification options available.
+[verification]
+; Verify signature hashes - verify that the hash a signature claims to be
+; over matches the hash of the data. Does not actually verify the signature.
+check_sighash=true
+
+; Settings related to the email interface to onak.
+[mail]
+maintainer_email=PGP Key Server Administrator <pgp-keyserver-admin@the.earth.li>
+mail_dir=/var/spool/onak
+; Specify the envelope sender address as the -f argument to
+;   sendmail.  This is the address which will receive any bounces.
+; If you don't use sendmail, then change this to an equivalent command.
+; If you do not want to process mail requests, leave this unset.
+<% if scope['onak::sender'] -%>
+mta=/usr/sbin/sendmail -t -oi -f<%= scope['onak::sender'] %>
+<% else -%>
+#mta=/usr/sbin/sendmail -t -oi -fmailer-daemon
+<% end -%>
+; Where the main onak binary lives, so the script that handles incoming
+; email knows where to find it.
+bin_dir=/usr/bin
+; Email address outgoing incremental messages will come from.
+; Needs to match the syncsite entries others sites have for this site.
+this_site=<%= scope['onak::this_site'] %>
+; Include a syncsite line for each site with which you are exchanging
+; incremental requests.
+<% Array(scope['onak::sync_sites']).each do |site| -%>
+syncsite=<%= site %>
+<% end -%>
+;syncsite=pgp-public-keys@keys.nl.pgp.net
+;syncsite=pgp-public-keys@blackhole.pca.dfn.de
+;syncsite=pgp-public-keys@pgp.es.net
+;syncsite=pgp-public-keys@keyserver.linux.it
+;syncsite=pgp-public-keys@pgp.dtype.org
+;syncsite=pgp-public-keys@kjsl.com
+
+; Database backend configurations below here
+
+[backend:defaultdb4]
+; The default DB4 backend. Recommended.
+type=db4
+location=/var/lib/onak
+
+[backend:examplehkp]
+; An example HKP backend; all operations will be done against the
+; provided keyserver, with no local storage.
+type=hkp
+location=hkp://the.earth.li/
+
+[backend:examplestacked]
+; A stacked set of backends. All fetch operations will be tried against
+; the provided list of backends, from left to right, until one succeeds.
+; All store operations are against the first backend.
+; If a fetch does not succeed against the first backend, but against a
+; later one, then the returned keys are also stored in the first backend.
+; This example configuration essentially produces a caching keyserver,
+; with any key fetched from the HKP backend being stored in the DB4
+; backend.
+; Note keys are not expired from the DB4 backend, so without any other
+; update mechanism configured this will result in stale data eventually.
+type=stacked
+location=defaultdb4:examplehkp

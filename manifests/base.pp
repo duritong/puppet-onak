@@ -5,7 +5,14 @@ class onak::base {
   }
 
   if versioncmp($facts['os']['release']['major'],'6') > 0 {
-    # tbd
+    file{'/etc/onak.ini':
+      content => template('onak/onak.ini.erb'),
+      require => Package['onak'],
+      notify  => Service['onak'],
+      owner   => 'root',
+      group   => apache,
+      mode    => '0640';
+    }
   } else {
     file{'/etc/onak.conf':
       source  => [ "puppet:///modules/site_onak/${::fqdn}/onak.conf",

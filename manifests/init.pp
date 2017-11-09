@@ -7,7 +7,10 @@ class onak(
   $nagios_keyid         = false,
   $nagios_first_keyline = false,
   $manage_shorewall     = false,
-  $manage_nagios        = false
+  $manage_nagios        = false,
+  $sender               = false,
+  $this_site            = "pgp-public-keys@${facts['domain']}",
+  $sync_sites           = [],
 ) {
   case $::operatingsystem {
     default: { include onak::base }
