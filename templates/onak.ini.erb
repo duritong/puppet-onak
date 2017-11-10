@@ -22,7 +22,11 @@ check_sighash=true
 
 ; Settings related to the email interface to onak.
 [mail]
+<% if scope['onak::sender'] -%>
+maintainer_email=PGP Key Server Administrator <<%= scope['onak::sender'] %>>
+<% else -%>
 maintainer_email=PGP Key Server Administrator <pgp-keyserver-admin@the.earth.li>
+<% end -%>
 mail_dir=/var/spool/onak
 ; Specify the envelope sender address as the -f argument to
 ;   sendmail.  This is the address which will receive any bounces.
